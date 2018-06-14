@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <loop class="CustomerStatistic\Loop\ArticleStatisticLoop" name="customer.statistic.article.statistic" />
+    </loops>
+
+    <forms>
+        <!--
+        <form name="MyFormName" class="CustomerStatistic\Form\MySuperForm" />
+        -->
+    </forms>
+
+    <commands>
+        <!--
+        <command class="CustomerStatistic\Command\MySuperCommand" />
+        -->
+    </commands>
+
+    <!--
+    <services>
+
+    </services>
+    -->
+
+    <hooks>
+        <hook id="customerstatistic.hook" class="CustomerStatistic\Hook\CustomerEditHook">
+            <tag name="hook.event_listener" event="customer.edit" type="back" method="onCustomerEdit" />
+        </hook>
+    </hooks>
+
+    <!--
+    <exports>
+
+    </exports>
+    -->
+
+    <!--
+    <imports>
+
+    </imports>
+    -->
+</config>

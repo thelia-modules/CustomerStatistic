@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-12 general-block-decorator">
+        <div class="row">
+            <div class="col-md-12 title title-without-tabs">
+                {intl l="Articles bought by this customer" d="customerstatistic.bo.default"}
+            </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-left-aligned">
+                        <thead>
+                        <tr>
+                            <th>{intl l="Article reference" d="customerstatistic.bo.default"}</th>
+                            <th>{intl l="Article Name" d="customerstatistic.bo.default"}</th>
+                            <th>{intl l="Unit Price (Untaxed)" d="customerstatistic.bo.default"}</th>
+                            <th class="text-right">{intl l="Number bought" d="customerstatistic.bo.default"}</th>
+                            <th class="text-right">{intl l="Total Price (Untaxed)" d="customerstatistic.bo.default"}</th>
+                        </tr>
+                        </thead>
+                        {loop type="customer.statistic.article.statistic" name="articlestat" customer_id=$customer_id}
+                            <tbody>
+                            <tr>
+                                <td><a href="{url path="admin/products/update/?product_id=%productId" productId=$PRODUCT_ID}">{$REFERENCE}</a></td>
+                                <td>{$NAME}</td>
+                                <td>{$UNIT_PRICE}</td>
+                                <td class="text-right">{$QUANTITY}</td>
+                                <td class="text-right">{$TOTAL_PRICE}</td>
+                            </tr>
+                            </tbody>
+                        {/loop}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
