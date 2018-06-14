@@ -14,6 +14,7 @@ use Thelia\Model\Order;
 use Thelia\Model\OrderProduct;
 use Thelia\Model\OrderQuery;
 use Thelia\Model\Product;
+use Thelia\Model\ProductQuery;
 use Thelia\Model\ProductSaleElementsQuery;
 
 
@@ -46,7 +47,7 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
                 /** @var OrderProduct $product */
                 foreach ($order->getOrderProducts()->getData() as $product) {
                     $listArticle[$product->getProductRef()] = [
-                        "Id"            => ProductSaleElementsQuery::create()->findOneById($product->getProductSaleElementsId())->getProductId(),
+                        "Id"            => ProductQuery::create()->findOneByRef($product->getProductRef())->getId(),
                         "Reference"     => $product->getProductRef(),
                         "Name"          => $product->getTitle(),
                         "UnitPrice"     => $product->getPrice(),
