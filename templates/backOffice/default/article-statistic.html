@@ -11,22 +11,54 @@
                         <tr>
                             <th>{intl l="Article reference" d="customerstatistic.bo.default"}</th>
                             <th>{intl l="Article Name" d="customerstatistic.bo.default"}</th>
-                            <th>{intl l="Unit Price (Untaxed)" d="customerstatistic.bo.default"}</th>
+                            <th class="text-right">{intl l="Unit Price (Untaxed)" d="customerstatistic.bo.default"}</th>
                             <th class="text-right">{intl l="Number bought" d="customerstatistic.bo.default"}</th>
                             <th class="text-right">{intl l="Total Price (Untaxed)" d="customerstatistic.bo.default"}</th>
                         </tr>
                         </thead>
+                        <tbody>
+                        {$TURNOVER = 0}
                         {loop type="customer.statistic.article.statistic" name="articlestat" customer_id=$customer_id}
-                            <tbody>
-                            <tr>
-                                <td><a href="{url path="admin/products/update/?product_id=%productId" productId=$PRODUCT_ID}">{$REFERENCE}</a></td>
-                                <td>{$NAME}</td>
-                                <td>{$UNIT_PRICE}</td>
-                                <td class="text-right">{$QUANTITY}</td>
-                                <td class="text-right">{$TOTAL_PRICE}</td>
-                            </tr>
-                            </tbody>
+                            {if $PRODUCT_ID != 0}
+                                <tr>
+                                    <td><a href="{url path="admin/products/update/?product_id=%productId" productId=$PRODUCT_ID}">{$REFERENCE}</a></td>
+                                    <td>{$NAME}</td>
+                                    <td class="text-right">{format_money number=$UNIT_PRICE}</td>
+                                    <td class="text-right">{$QUANTITY}</td>
+                                    <td class="text-right">{format_money number=$TOTAL_PRICE}</td>
+                                </tr>
+                            {else}
+                                <tr>
+                                    <td>{$REFERENCE}</td>
+                                    <td>{$NAME}</td>
+                                    <td class="text-right">{format_money number=$UNIT_PRICE}</td>
+                                    <td class="text-right">{$QUANTITY}</td>
+                                    <td class="text-right">{format_money number=$TOTAL_PRICE}</td>
+                                </tr>
+                            {/if}
+                        {$TURNOVER = $TURNOVER + $TOTAL_PRICE}
                         {/loop}
+                        <thead>
+                        <tr>
+                            <th colspan="12" class="text-center">{intl l="Turnover for this customer (Untaxed)" d="customerstatistic.bo.default"}</th>
+                        </tr>
+                        </thead>
+
+                        <tr>
+                            <td colspan="12" class="text-center">{format_money number=$TURNOVER}</td>
+                        </tr>
+
+
+                        {elseloop rel="articlestat"}
+                            <tr>
+                                <td colspan="4">
+                                    <div class="alert alert-info">
+                                        {intl l="No articles were bought by this client."}
+                                    </div>
+                                </td>
+                            </tr>
+                        {/elseloop}
+                        </tbody>
                     </table>
                 </div>
             </div>

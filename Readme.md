@@ -18,7 +18,7 @@ Give you statistics about the articles bought by a customer.
 Add it in your main thelia composer.json file
 
 ```
-composer require thelia/customer-statistic-module:~1.0.1
+composer require thelia/customer-statistic-module:~1.0.2
 ```
 
 ## Usage

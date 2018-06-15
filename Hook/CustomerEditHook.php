@@ -14,7 +14,9 @@ class CustomerEditHook extends BaseHook
         $customer_id = intval($event->getArgument("customer_id", null));
 
         if (0 !== $customer_id) {
-            $html = $this->render("article-statistic.html", array("customer_id" => $customer_id));
+            $html = $this->render("article-statistic.html", array(
+                "customer_id"   => $customer_id
+            ));
 
             if ("" !== $html) {
                 $event->add($html);
