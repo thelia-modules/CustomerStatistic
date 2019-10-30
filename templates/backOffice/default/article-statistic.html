@@ -17,9 +17,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {$TURNOVER = 0}
                         {loop type="customer.statistic.article.statistic" name="articlestat" customer_id=$customer_id}
-                            {if $PRODUCT_ID != 0}
+                            {if $PRODUCT_ID > 0}
                                 <tr>
                                     <td><a href="{url path="admin/products/update/?product_id=%productId" productId=$PRODUCT_ID}">{$REFERENCE}</a></td>
                                     <td>{$NAME}</td>
@@ -27,7 +26,7 @@
                                     <td class="text-right">{$QUANTITY}</td>
                                     <td class="text-right">{format_money number=$TOTAL_PRICE}</td>
                                 </tr>
-                            {else}
+                            {elseif $PRODUCT_ID != -1}
                                 <tr>
                                     <td>{$REFERENCE}</td>
                                     <td>{$NAME}</td>
@@ -35,8 +34,9 @@
                                     <td class="text-right">{$QUANTITY}</td>
                                     <td class="text-right">{format_money number=$TOTAL_PRICE}</td>
                                 </tr>
+                            {else}
+                                {$TURNOVER = $UNIT_PRICE}
                             {/if}
-                        {$TURNOVER = $TURNOVER + $TOTAL_PRICE}
                         {/loop}
                         <thead>
                         <tr>
