@@ -38,9 +38,11 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
         $customerId = $this->getCustomerId();
 
         $search = OrderQuery::create();
-        $search->filterByCustomerId($customerId);
+        $search->findByCustomerId($customerId);
 
         $listArticle = array();
+
+        $grandTotal = 0;
 
         /** @var Order $order */
         foreach ($search as $order) {
@@ -50,12 +52,18 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
                 foreach ($order->getOrderProducts()->getData() as $product) {
                     $article = ProductQuery::create()->findOneByRef($product->getProductRef());
                     $locale = $this->request->getSession()->getLang()->getLocale();
+                    if ($product->getWasInPromo() == 1) {
+                        $price = $product->getPromoPrice();
+                    } else {
+                        $price = $product->getPrice();
+                    }
+                    $grandTotal += $price;
                     if ($article) {
                         $listArticle[$product->getProductRef()] = [
                             "Id"            => $article->getId(),
                             "Reference"     => $product->getProductRef(),
                             "Name"          => ProductI18nQuery::create()->filterByLocale($locale)->findOneById($article->getId())->getTitle(),
-                            "UnitPrice"     => $product->getPrice(),
+                            "UnitPrice"     => $price,
                             "Quantity"      => (int) $listArticle[$product->getProductRef()]["Quantity"] + (int) $product->getQuantity(),
                         ];
                     } else {
@@ -63,7 +71,7 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
                             "Id"            => 0,
                             "Reference"     => $product->getProductRef(),
                             "Name"          => $product->getTitle(),
-                            "UnitPrice"     => $product->getPrice(),
+                            "UnitPrice"     => $price,
                             "Quantity"      => (int) $listArticle[$product->getProductRef()]["Quantity"] + (int) $product->getQuantity(),
                         ];
                     }
@@ -71,6 +79,13 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
             }
         }
 
+        $listArticle[0]= [
+            "Id"            => -1,
+            "Reference"     => -1,
+            "Name"          => "Total",
+            "UnitPrice"     => $grandTotal,
+            "Quantity"      => 1,
+        ];
         return $listArticle;
     }
 
@@ -84,7 +99,7 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
                 ->set("NAME", $article["Name"])
                 ->set("UNIT_PRICE", round((float) $article["UnitPrice"], 2))
                 ->set("QUANTITY", $article["Quantity"])
-                ->set("TOTAL_PRICE", (int) $article["Quantity"] * round((float) $article["UnitPrice"], 2))
+                ->set("TOTAL_PRICE", round((int) $article["Quantity"] * (float) $article["UnitPrice"], 2))
             ;
             $loopResult->addRow($loopResultRow);
         }

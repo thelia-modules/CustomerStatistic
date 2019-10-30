@@ -18,7 +18,7 @@ Give you statistics about the articles bought by a customer.
 Add it in your main thelia composer.json file
 
 ```
-composer require thelia/customer-statistic-module:~1.0.2
+composer require thelia/customer-statistic-module:~1.0.3
 ```
 
 ## Usage
@@ -54,3 +54,7 @@ The customer.edit hook is used to attach the statistics to the customer edit pag
 ### Exemple
 
 ```{loop name="customer.statistic.article.statistic" type="article.statistic"}<!-- your template -->{/loop}```
+
+### Additionnal information
+
+A product "Total" with a $PRODUCT_ID of -1 will be added in the loop, with the total turneover for the customer.
