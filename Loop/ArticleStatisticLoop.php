@@ -3,7 +3,12 @@
 namespace CustomerStatistic\Loop;
 
 
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Thelia\Core\HttpFoundation\Session\Session;
+use Thelia\Core\Security\SecurityContext;
 use Thelia\Core\Template\Element\ArraySearchLoopInterface;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
@@ -51,20 +56,21 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
                 /** @var OrderProduct $product */
                 foreach ($order->getOrderProducts()->getData() as $product) {
                     $article = ProductQuery::create()->findOneByRef($product->getProductRef());
-                    $locale = $this->request->getSession()->getLang()->getLocale();
+                    $locale = $this->requestStack->getSession()->getLang()->getLocale();
                     if ($product->getWasInPromo() == 1) {
                         $price = $product->getPromoPrice();
                     } else {
                         $price = $product->getPrice();
                     }
                     $grandTotal += $price;
+                    $quantity = (int)($listArticle[$product->getProductRef()]["Quantity"] ?? 0) ;
                     if ($article) {
                         $listArticle[$product->getProductRef()] = [
                             "Id"            => $article->getId(),
                             "Reference"     => $product->getProductRef(),
                             "Name"          => ProductI18nQuery::create()->filterByLocale($locale)->findOneById($article->getId())->getTitle(),
                             "UnitPrice"     => $price,
-                            "Quantity"      => (int) $listArticle[$product->getProductRef()]["Quantity"] + (int) $product->getQuantity(),
+                            "Quantity"      => $quantity + (int) $product->getQuantity(),
                         ];
                     } else {
                         $listArticle[$product->getProductRef()] = [
@@ -72,7 +78,7 @@ class ArticleStatisticLoop extends BaseLoop implements ArraySearchLoopInterface
                             "Reference"     => $product->getProductRef(),
                             "Name"          => $product->getTitle(),
                             "UnitPrice"     => $price,
-                            "Quantity"      => (int) $listArticle[$product->getProductRef()]["Quantity"] + (int) $product->getQuantity(),
+                            "Quantity"      => $quantity + (int) $product->getQuantity(),
                         ];
                     }
                 }
