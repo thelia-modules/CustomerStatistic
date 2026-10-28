@@ -1,5 +1,8 @@
 # Customer Statistic
 
+> This module is no longer maintained and will not be ported to Thelia 3. Its 2.x versions remain available on Packagist.
+> Use [PerfectStats](https://github.com/thelia-modules/PerfectStats) (`thelia/perfectstats-module`) instead.
+
 Give you statistics about the articles bought by a customer.
 
 ## Screenshot
